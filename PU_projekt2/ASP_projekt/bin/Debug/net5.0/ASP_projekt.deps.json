@@ -720,7 +720,8 @@
       "System.Memory/4.5.3": {},
       "CQRS/1.0.0": {
         "dependencies": {
-          "Model": "1.0.0"
+          "Model": "1.0.0",
+          "NEST": "7.16.0"
         },
         "runtime": {
           "CQRS.dll": {}

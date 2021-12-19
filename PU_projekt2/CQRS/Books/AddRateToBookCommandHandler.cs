@@ -1,4 +1,7 @@
-﻿using Model;
+﻿using Microsoft.EntityFrameworkCore;
+using Model;
+using Model.DTO;
+using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +13,13 @@ namespace CQRS
     public class AddRateToBookCommandHandler : ICommandHandler<AddRateToBookCommand>
     {
         private Database db { get; }
+        private IElasticClient elasticClient { get; }
 
-        public AddRateToBookCommandHandler(Database db)
+        public AddRateToBookCommandHandler(Database db, IElasticClient elasticClient)
         {
             this.db = db;
+            this.elasticClient = elasticClient;
+
         }
 
         public void Handle(AddRateToBookCommand command)
@@ -30,6 +36,28 @@ namespace CQRS
             });
 
             db.SaveChanges();
+
+            //Elastic Search
+            var _book = db.Books.
+                   Include(b => b.Rates).
+                   Include(b => b.Authors).
+                   ToList().Select
+                   (b => new BookDTO
+                   {
+                       ID = b.Id,
+                       ReleaseDate = b.ReleaseDate,
+                       AvarageRate = b.Rates.Count > 0 ? b.Rates.Average(r => r.Value) : 0,
+                       RatesCount = b.Rates.Count(),
+                       Title = b.Title,
+                       Authors = b.Authors.Select(a => new BookAuthorDTO
+                       {
+                           FirstName = a.FirstName,
+                           Id = a.Id,
+                           SecondName = a.SecondName
+                       }).ToList()
+                   }
+                   ).Where(b => b.ID == command.index).Single();
+            elasticClient.IndexDocument<BookDTO>(_book);
         }
     }
 }

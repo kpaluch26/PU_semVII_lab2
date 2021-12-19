@@ -475,7 +475,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v5.0",
         "dependencies": {
-          "Model": "1.0.0"
+          "Model": "1.0.0",
+          "NEST": "7.16.0"
         },
         "compile": {
           "bin/placeholder/CQRS.dll": {}

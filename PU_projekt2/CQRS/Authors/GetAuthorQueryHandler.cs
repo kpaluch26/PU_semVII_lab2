@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Model;
 using Model.DTO;
+using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +13,18 @@ namespace CQRS.Authors
     public class GetAuthorQueryHandler: IQueryHandler<GetAuthorQuery, AuthorDTO>
     {
         private readonly Database db;
+        private IElasticClient elasticClient { get; }
 
-        public GetAuthorQueryHandler(Database db)
+        public GetAuthorQueryHandler(Database db, IElasticClient elasticClient)
         {
             this.db = db;
+            this.elasticClient = elasticClient;
         }
 
         public AuthorDTO Handle(GetAuthorQuery query)
         {
+            return elasticClient.Get<AuthorDTO>(query.Id).Source;
+            /*
             return db.Authors
                 .Include(b => b.Rates)
                 .Include(b => b.Books)
@@ -36,6 +41,7 @@ namespace CQRS.Authors
                         Id = a.Id
                     }).ToList()
                 }).Where(b => b.Id == query.Id).Single();
+                */
         }
     }
 }

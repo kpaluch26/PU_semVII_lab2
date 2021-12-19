@@ -1,3 +1,4 @@
+using ASP_projekt.ElasticModels;
 using CQRS;
 using CQRS.Authors;
 using Microsoft.AspNetCore.Builder;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Model;
 using Model.DTO;
+using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +34,9 @@ namespace ASP_projekt
             });
 
             services.AddDbContext<Database>();
+
+            //Elastic model
+            services.AddScoped<IElasticClient>(x => new ElasticClient(new ElasticConnection(new Uri("http://localhost:9200"))));
             //CQRS
             services.AddScoped<CommandBus>();
             services.AddScoped<QueryBus>();

@@ -2,6 +2,7 @@
 using CQRS.Authors;
 using Microsoft.AspNetCore.Mvc;
 using Model.DTO;
+using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,13 @@ namespace ASP_projekt.Controllers
     {
         private readonly CommandBus commandBus;
         private readonly QueryBus queryBus;
+        private readonly IElasticClient elasticClient;
 
-        public CQRSController(CommandBus commandBus, QueryBus queryBus)
+        public CQRSController(CommandBus commandBus, QueryBus queryBus, IElasticClient elasticClient)
         {
             this.commandBus = commandBus;
             this.queryBus = queryBus;
+            this.elasticClient = elasticClient;
         }
 
         [HttpGet("/CQRS/books")]

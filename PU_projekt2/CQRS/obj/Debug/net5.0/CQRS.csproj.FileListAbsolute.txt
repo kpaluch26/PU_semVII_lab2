@@ -26,4 +26,3 @@ D:\studia_II_stopien\PU\LAB\LAB_2\PU_projekt2\CQRS\obj\Debug\net5.0\CQRS.Generat
 D:\studia_II_stopien\PU\LAB\LAB_2\PU_projekt2\CQRS\obj\Debug\net5.0\CQRS.AssemblyInfoInputs.cache
 D:\studia_II_stopien\PU\LAB\LAB_2\PU_projekt2\CQRS\obj\Debug\net5.0\CQRS.AssemblyInfo.cs
 D:\studia_II_stopien\PU\LAB\LAB_2\PU_projekt2\CQRS\obj\Debug\net5.0\CQRS.csproj.CoreCompileInputs.cache
-D:\studia_II_stopien\PU\LAB\LAB_2\PU_projekt2\CQRS\obj\Debug\net5.0\CQRS.csproj.CopyComplete

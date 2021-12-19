@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Model;
 using Model.DTO;
+using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +13,19 @@ namespace CQRS
     public class GetBooksQueryHandler : IQueryHandler<GetBooksQuery, List<BookDTO>>
     {
         private readonly Database db;
-        public GetBooksQueryHandler(Database db)
+        private IElasticClient elasticClient { get; }
+        public GetBooksQueryHandler(Database db, IElasticClient elasticClient)
         {
             this.db = db;
+            this.elasticClient = elasticClient;
         }
 
         public List<BookDTO> Handle(GetBooksQuery query)
         {
+            List<BookDTO> result = elasticClient.Search<BookDTO>(x => x.Size(query.Count).Skip(query.Page * query.Count).Index("booksIndex")).Documents.ToList();
+
+            return result;
+            /*
             return db.Books
                 .Include(b => b.Rates)
                 .Include(b => b.Authors)
@@ -39,6 +46,7 @@ namespace CQRS
                         Id = a.Id
                     }).ToList()
                 }).ToList();
+            */
         }
     }
 }
