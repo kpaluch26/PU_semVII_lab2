@@ -57,7 +57,8 @@ namespace CQRS
                        }).ToList()
                    }
                    ).Where(b => b.ID == command.index).Single();
-            elasticClient.IndexDocument<BookDTO>(_book);
+            //elasticClient.IndexDocument<BookDTO>(_book);
+            elasticClient.Index(_book, i => i.Index("booksIndex"));
         }
     }
 }

@@ -53,7 +53,8 @@ namespace CQRS.Authors
                         Id = b.Id,
                     }).ToList()
                 }).Where(b => b.Id == command.index).Single();
-            elasticClient.IndexDocument<AuthorDTO>(_author);
+            //elasticClient.IndexDocument<AuthorDTO>(_author);
+            elasticClient.Index(_author, i => i.Index("authorsIndex"));
         }
     }
 }

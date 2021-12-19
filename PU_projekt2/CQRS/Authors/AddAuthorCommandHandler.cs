@@ -39,7 +39,8 @@ namespace CQRS.Authors
                 FirstName = author.FirstName, 
                 SecondName = author.SecondName 
             };
-            elasticClient.IndexDocument<AuthorDTO>(_authorDTO);
+            //elasticClient.IndexDocument<AuthorDTO>(_authorDTO);
+            elasticClient.Index(_authorDTO, i => i.Index("authorsIndex"));
         }
     }
 }

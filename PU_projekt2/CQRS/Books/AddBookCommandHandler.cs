@@ -39,7 +39,8 @@ namespace CQRS
                 Title = book.Title, 
                 ReleaseDate = book.ReleaseDate 
             };
-            elasticClient.IndexDocument<BookDTO>(_bookDTO);
+            //elasticClient.IndexDocument<BookDTO>(_bookDTO);
+            elasticClient.Index(_bookDTO, i => i.Index("booksIndex"));
         }
     }
 }
