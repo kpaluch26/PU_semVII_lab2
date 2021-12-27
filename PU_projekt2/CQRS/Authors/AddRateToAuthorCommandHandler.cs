@@ -37,24 +37,13 @@ namespace CQRS.Authors
             db.SaveChanges();
 
             //Elastic Search
-            var _author = db.Authors
-                .Include(a => a.Rates)
-                .Include(a => a.Books)
-                .ToList().Select(a => new AuthorDTO
-                {
-                    Id = a.Id,
-                    FirstName = a.FirstName,
-                    SecondName = a.SecondName,
-                    AvarageRate = (a.Rates.Count() > 0 ? a.Rates.Average(r => r.Value) : 0),
-                    RatesCount = (a.Rates.Count() > 0 ? a.Rates.Count() : 0),
-                    Books = a.Books.Select(b => new AuthorBooksDTO
-                    {
-                        Title = b.Title,
-                        Id = b.Id,
-                    }).ToList()
-                }).Where(b => b.Id == command.index).Single();
-            //elasticClient.IndexDocument<AuthorDTO>(_author);
-            elasticClient.Index(_author, i => i.Index("authorsIndex"));
+            author = db.Authors.Where(x => x.Id == command.index).Single();
+
+            UpdateResponse<AuthorDTO> updateResponse = elasticClient.Update<AuthorDTO>(command.index, u => u.Doc(new AuthorDTO
+            {
+                AvarageRate = author.Rates.Average(a => a.Value),
+                RatesCount = author.Rates.Count()
+            }));
         }
     }
 }

@@ -58,4 +58,3 @@ D:\studia_II_stopien\PU\LAB\LAB_2\PU_projekt2\ASP_projekt\obj\Debug\net5.0\ASP_p
 D:\studia_II_stopien\PU\LAB\LAB_2\PU_projekt2\ASP_projekt\obj\Debug\net5.0\ref\ASP_projekt.dll
 D:\studia_II_stopien\PU\LAB\LAB_2\PU_projekt2\ASP_projekt\obj\Debug\net5.0\ASP_projekt.pdb
 D:\studia_II_stopien\PU\LAB\LAB_2\PU_projekt2\ASP_projekt\obj\Debug\net5.0\ASP_projekt.genruntimeconfig.cache
-D:\studia_II_stopien\PU\LAB\LAB_2\PU_projekt2\ASP_projekt\obj\Debug\net5.0\ASP_projekt.csproj.CopyComplete

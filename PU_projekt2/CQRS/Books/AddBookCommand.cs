@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace CQRS
 {
-    public record AddBookCommand(string Title, DateTime ReleaseDate, List<int> AuthorsIDs) : ICommand;
+    public record AddBookCommand(string Title, DateTime ReleaseDate, List<int> AuthorsIDs, string Description) : ICommand;
 }

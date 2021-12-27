@@ -12,7 +12,7 @@ namespace CQRS.Authors
     public class AddAuthorCommandHandler : ICommandHandler<AddAuthorCommand>
     {
         private Database db { get; }
-        private IElasticClient elasticClient { get; }
+        private IElasticClient elasticClient;
 
         public AddAuthorCommandHandler(Database db, IElasticClient elasticClient)
         {
@@ -25,22 +25,30 @@ namespace CQRS.Authors
             var author = new Author
             {
                 FirstName = command.FirstName,
-                SecondName = command.SecondName
-
+                SecondName = command.SecondName,
+                CV = command.CV
             };
             author.Books = db.Books.Where(a => command.BooksIDs.Contains(a.Id)).ToList();
             db.Authors.Add(author);
             db.SaveChanges();
 
             //Elastic Search
-            AuthorDTO _authorDTO = new AuthorDTO 
-            { 
-                Id = author.Id, 
-                FirstName = author.FirstName, 
-                SecondName = author.SecondName 
+            AuthorDTO _authorDTO = new AuthorDTO
+            {
+                Id = author.Id,
+                FirstName = author.FirstName,
+                SecondName = author.SecondName,
+                Books = author.Books.Select(s => new AuthorBooksDTO
+                {
+                    Id = s.Id,
+                    Title = s.Title
+                }).ToList(),
+                AvarageRate = 0,
+                RatesCount = 0,
+                CV = author.CV
             };
-            //elasticClient.IndexDocument<AuthorDTO>(_authorDTO);
-            elasticClient.Index(_authorDTO, i => i.Index("authorsIndex"));
+
+            IndexResponse result = elasticClient.IndexDocument<AuthorDTO>(_authorDTO);
         }
     }
 }

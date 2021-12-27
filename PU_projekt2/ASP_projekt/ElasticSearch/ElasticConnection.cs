@@ -8,8 +8,8 @@ namespace ASP_projekt.ElasticModels
 	{
 		public ElasticConnection(Uri uri = null) : base(uri)
         {
-			this.DefaultMappingFor<BookDTO>(x => x.IndexName("booksIndex"));
-			this.DefaultMappingFor<AuthorDTO>(x => x.IndexName("authorsIndex"));
+			this.DefaultMappingFor<BookDTO>(x => x.IndexName("index_books"));
+			this.DefaultMappingFor<AuthorDTO>(x => x.IndexName("index_authors"));
 		}
 	}
 }

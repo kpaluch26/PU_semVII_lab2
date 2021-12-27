@@ -27,8 +27,9 @@ namespace CQRS
             {
                 db.Books.Remove(book);
                 db.SaveChanges();
+                elasticClient.Delete<BookDTO>(command.Id);
             }
-            elasticClient.Delete<BookDTO>(command.Id);
+            
         }
 
     }

@@ -25,7 +25,8 @@ namespace CQRS
             Book book = new Book
             {
                 Title = command.Title,
-                ReleaseDate = command.ReleaseDate
+                ReleaseDate = command.ReleaseDate,
+                Description = command.Description               
             };
 
             book.Authors = db.Authors.Where(a => command.AuthorsIDs.Contains(a.Id)).ToList();
@@ -37,10 +38,19 @@ namespace CQRS
             { 
                 ID = book.Id, 
                 Title = book.Title, 
-                ReleaseDate = book.ReleaseDate 
+                ReleaseDate = book.ReleaseDate,
+                Authors = book.Authors.Select(s => new BookAuthorDTO
+                {
+                    Id = s.Id,
+                    FirstName = s.FirstName,
+                    SecondName = s.SecondName
+                }).ToList(),
+                Description = book.Description,
+                RatesCount = 0,
+                AvarageRate = 0           
             };
-            //elasticClient.IndexDocument<BookDTO>(_bookDTO);
-            elasticClient.Index(_bookDTO, i => i.Index("booksIndex"));
+            IndexResponse result = elasticClient.IndexDocument<BookDTO>(_bookDTO);
+            //elasticClient.Index(_bookDTO, i => i.Index("booksIndex"));
         }
     }
 }

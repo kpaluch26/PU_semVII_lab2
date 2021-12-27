@@ -12,18 +12,20 @@ namespace CQRS.Authors
 {
     public class GetAuthorQueryHandler: IQueryHandler<GetAuthorQuery, AuthorDTO>
     {
-        private readonly Database db;
+        //private readonly Database db;
         private IElasticClient elasticClient { get; }
 
         public GetAuthorQueryHandler(Database db, IElasticClient elasticClient)
         {
-            this.db = db;
+            //this.db = db;
             this.elasticClient = elasticClient;
         }
 
         public AuthorDTO Handle(GetAuthorQuery query)
         {
-            return elasticClient.Get<AuthorDTO>(query.Id).Source;
+            AuthorDTO result;
+            result = elasticClient.Get<AuthorDTO>(query.Id).Source;
+            return result;
             /*
             return db.Authors
                 .Include(b => b.Rates)

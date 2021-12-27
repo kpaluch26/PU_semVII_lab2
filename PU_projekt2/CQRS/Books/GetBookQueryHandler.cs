@@ -12,18 +12,18 @@ namespace CQRS
 {
     public class GetBookQueryHandler : IQueryHandler<GetBookQuery, BookDTO>
     {
-        private readonly Database db;
+        //private readonly Database db;
         private IElasticClient elasticClient { get; }
 
         public GetBookQueryHandler(IElasticClient elasticClient, Database db )
         {
-            this.db = db;
+           // this.db = db;
             this.elasticClient = elasticClient;
         }
 
         public BookDTO Handle(GetBookQuery query)
         {
-            BookDTO result = elasticClient.Search<BookDTO>(s => s.Index("booksIndex").Query(q => q.QueryString(qs => qs.Fields(p => p.Field(x => x.ID)).Query(query.Id.ToString())))).Documents.First();
+            BookDTO result = elasticClient.Get<BookDTO>(query.Id).Source;
             return result;
             /*
             return db.Books

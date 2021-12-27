@@ -35,8 +35,6 @@ namespace ASP_projekt
 
             services.AddDbContext<Database>();
 
-            //Elastic model
-            services.AddScoped<IElasticClient>(x => new ElasticClient(new ElasticConnection(new Uri("http://localhost:9200"))));
             //CQRS
             services.AddScoped<CommandBus>();
             services.AddScoped<QueryBus>();
@@ -52,6 +50,8 @@ namespace ASP_projekt
             services.AddScoped<ICommandHandler<DeleteAuthorCommand>, DeleteAuthorCommandHandler>();
 
             services.AddControllers();
+            //Elastic model
+            services.AddScoped<IElasticClient>(x => new ElasticClient(new ElasticConnection(new Uri("http://localhost:9200"))));
             services.AddSwaggerGen(); //konfiguracja swaggera
         }
 

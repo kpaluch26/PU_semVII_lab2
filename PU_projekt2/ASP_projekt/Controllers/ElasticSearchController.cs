@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CQRS;
+using Microsoft.AspNetCore.Mvc;
 using Model;
 using Model.DTO;
 using Nest;
@@ -59,31 +60,83 @@ namespace ASP_projekt.Controllers
             {
                 var author = new AuthorDTO 
                 { 
-                    FirstName = _firstnames[rnd.Next(7)], 
-                    SecondName = _surnames[rnd.Next(7)] 
+                    FirstName = _firstnames[rnd.Next(0, 6)], 
+                    SecondName = _surnames[rnd.Next(0, 6)],
+                    CV = "brak"
                 };
                 authorsDTO.Add(author);
+            }
 
-                db.Authors.Add(new Author 
-                { 
-                    FirstName = author.FirstName, 
-                    SecondName = author.SecondName 
+            foreach(var a in authorsDTO)
+            {
+                var _newAuthor = new Author
+                {
+                    FirstName = a.FirstName,
+                    SecondName = a.SecondName,
+                    CV = a.CV
+                };
+
+                db.Authors.Add(_newAuthor);
+
+                db.AuthorsRate.Add(new AuthorRate
+                {
+                    Type = RateType.AuthorRate,
+                    Author = _newAuthor,
+                    FkAuthor = _newAuthor.Id,
+                    Date = DateTime.Now,
+                    Value = (short)rnd.Next(1, 5)
                 });
             }
 
             for (int i = 0; i < 10; i++)
             {
+                int temp = rnd.Next(0, 9);
+                AuthorDTO _authorDTO = authorsDTO[temp];
+                List<BookAuthorDTO> badto = new List<BookAuthorDTO>();
+                badto.Add(new BookAuthorDTO
+                {
+                    Id = _authorDTO.Id,
+                    FirstName = _authorDTO.FirstName,
+                    SecondName = _authorDTO.SecondName
+                });
                 var book = new BookDTO 
                 {
                     Title = _books[i], 
-                    ReleaseDate = DateTime.Now 
+                    Description = "do ręcznego uzupełnienia",
+                    ReleaseDate = DateTime.Now,
+                    Authors = badto
                 };
                 booksDTO.Add(book);
+            }
 
-                db.Books.Add(new Book 
-                { 
-                    Title = book.Title, 
-                    ReleaseDate = book.ReleaseDate 
+            foreach (var b in booksDTO)
+            {
+                var _author = b.Authors[0];
+
+                var _newBook = new Book
+                {
+                    Title = b.Title,
+                    Description = b.Description,
+                    ReleaseDate = b.ReleaseDate,
+                    Authors = new List<Author>
+                    {
+                        new Author{
+                            Id = _author.Id,
+                            FirstName = _author.FirstName,
+                            SecondName = _author.SecondName
+                        }
+                    }
+                };
+
+                db.Books.Add(_newBook);
+
+                db.BooksRate.Add(new BookRate
+                {
+                    Type = RateType.BookRate,
+                    Book = _newBook,
+                    FkBook = _newBook.Id,
+                    Date = DateTime.Now,
+                    Value = (short)rnd.Next(1, 5)
                 });
             }
 
@@ -91,13 +144,13 @@ namespace ASP_projekt.Controllers
 
             foreach (var _author in authorsDTO)
             {
-                //elasticClient.IndexDocument<AuthorDTO>(_author);
-                elasticClient.Index(_author, i => i.Index("authorsIndex"));
+                elasticClient.IndexDocument<AuthorDTO>(_author);
+                //elasticClient.Index(_author, i => i.Index("authorsIndex"));
             }
             foreach (var _book in booksDTO)
             {
-                //elasticClient.IndexDocument<BookDTO>(_book);
-                elasticClient.Index(_book, i => i.Index("booksIndex"));
+                elasticClient.IndexDocument<BookDTO>(_book);
+                //elasticClient.Index(_book, i => i.Index("booksIndex"));
             }
 
         }

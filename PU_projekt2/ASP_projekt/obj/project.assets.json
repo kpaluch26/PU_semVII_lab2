@@ -490,7 +490,8 @@
         "framework": ".NETCoreApp,Version=v5.0",
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "5.0.11",
-          "Microsoft.EntityFrameworkCore.Sqlite": "5.0.11"
+          "Microsoft.EntityFrameworkCore.Sqlite": "5.0.11",
+          "NEST": "7.16.0"
         },
         "compile": {
           "bin/placeholder/Model.dll": {}
